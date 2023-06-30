@@ -57,7 +57,7 @@ namespace gotaApi.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> Deletar([FromQuery] string Id)
+        public async Task<ActionResult> Deletar([FromQuery] string Id, bool arquivar)
         {
             try
             {
@@ -65,24 +65,34 @@ namespace gotaApi.Controllers
                 if (artista == null)
                 {
                     throw new Exception("Artista não encontrado.");
-                }
-                _context.artistas.Remove(artista);
+                } 
+                if (arquivar) artista.Arquivar();
+                else artista.Deletar();
+                _context.artistas.Update(artista);
                 await _context.SaveChangesAsync();
-                return StatusCode(200, new ResponseModel() { mensagem = "Artista deletado com sucesso." });
-            }
+                var textTipo = arquivar ? "arquivado" : "deletado";
+                return StatusCode(200, new ResponseModel() { mensagem = "Artista " + textTipo + " com sucesso." });
+             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet]
-        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet] 
         public async Task<ActionResult> Buscar()
         {
             try
             {
-                return Ok( await _context.artistas.ToListAsync());
+                return Ok( await _context.artistas.Where(a => !a.Lixeira && !a.Arquivado).Select(a => new ArtistaModel()
+                {
+                     Id = a.Id,
+                     DataDeCadastro = a.DataDeCadastro,
+                     DataDeAtualizacao = a.DataDeAtualizacao,
+                     Atuacao  = a.Atuacao,
+                     Celular = a.Celular,
+                     Nome = a.Nome
+                }).ToListAsync());
             }
             catch (Exception ex)
             {

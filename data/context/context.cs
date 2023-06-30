@@ -22,5 +22,6 @@ namespace data.context
         }
 
         public DbSet<Artista> artistas { get; set; }
+        public DbSet<Projeto> projetos { get; set; }
     }
 }
