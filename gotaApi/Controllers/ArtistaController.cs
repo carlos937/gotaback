@@ -25,7 +25,7 @@ namespace gotaApi.Controllers
             try
             {
 
-                _context.artistas.Add(new Artista(model.Nome, model.Celular, model.Atuacao));
+                _context.Artistas.Add(new Artista(model.Nome, model.Celular, model.Atuacao));
                 await _context.SaveChangesAsync();
                 return StatusCode(200, new ResponseModel(){ mensagem = "Artista adicionado com sucesso." } );
             }
@@ -40,13 +40,13 @@ namespace gotaApi.Controllers
         {
             try
             {
-                var artista = _context.artistas.FirstOrDefault(a => a.Id == model.Id);
+                var artista = _context.Artistas.FirstOrDefault(a => a.Id == model.Id);
                 if (artista == null)
                 {
                     throw new Exception("Artista não encontrado.");
                 }
                 artista.Editar(model.Nome, model.Celular, model.Atuacao);
-                _context.artistas.Update(artista);
+                _context.Artistas.Update(artista);
                 await _context.SaveChangesAsync();
                 return StatusCode(200, new ResponseModel() { mensagem = "Artista editado com sucesso." });
             }
@@ -61,14 +61,14 @@ namespace gotaApi.Controllers
         {
             try
             {
-                var artista = _context.artistas.FirstOrDefault(a => a.Id == Id);
+                var artista = _context.Artistas.FirstOrDefault(a => a.Id == Id);
                 if (artista == null)
                 {
                     throw new Exception("Artista não encontrado.");
                 } 
                 if (arquivar) artista.Arquivar();
                 else artista.Deletar();
-                _context.artistas.Update(artista);
+                _context.Artistas.Update(artista);
                 await _context.SaveChangesAsync();
                 var textTipo = arquivar ? "arquivado" : "deletado";
                 return StatusCode(200, new ResponseModel() { mensagem = "Artista " + textTipo + " com sucesso." });
@@ -84,7 +84,7 @@ namespace gotaApi.Controllers
         {
             try
             {
-                return Ok( await _context.artistas.Where(a => !a.Lixeira && !a.Arquivado).Select(a => new ArtistaModel()
+                return Ok( await _context.Artistas.Where(a => !a.Lixeira && !a.Arquivado).Select(a => new ArtistaModel()
                 {
                      Id = a.Id,
                      DataDeCadastro = a.DataDeCadastro,

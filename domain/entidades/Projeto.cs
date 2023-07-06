@@ -11,6 +11,8 @@ namespace domain.entidades
     { 
         public string Nome { get; private set; } = string.Empty;
         public string Descricao { get; private set; } = string.Empty;
+        public Arquivo Imagem { get; private set; }
+        public string ImagemId { get; private set; }
         public virtual List<Artista>? Artistas { get; private set; } = new List<Artista>();
 
         public Projeto()

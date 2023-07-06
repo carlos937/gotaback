@@ -24,14 +24,14 @@ namespace gotaApi.Controllers
             {
                 var projeto = new Projeto(model.Nome, model.Descricao);
                 model.ArtistasId.ForEach(id => {
-                    var artista = _context.artistas.FirstOrDefault(a => a.Id == id);
+                    var artista = _context.Artistas.FirstOrDefault(a => a.Id == id);
                     if (artista == null)
                     {
                         throw new Exception("Artista não encontrado.");
                     }
                     projeto.IncluirArtista(artista);
                 });
-                _context.projetos.Add(projeto);
+                _context.Projetos.Add(projeto);
                 await _context.SaveChangesAsync();
                 return StatusCode(200, new ResponseModel() { mensagem = "Projeto adicionado com sucesso." });
             }
@@ -46,7 +46,7 @@ namespace gotaApi.Controllers
         {
             try
             {
-                var projeto = _context.projetos.FirstOrDefault(a => a.Id == model.Id);
+                var projeto = _context.Projetos.FirstOrDefault(a => a.Id == model.Id);
                 if (projeto == null)
                 {
                     throw new Exception("Projeto não encontrado.");
@@ -54,14 +54,14 @@ namespace gotaApi.Controllers
                 projeto.Editar(model.Nome, model.Descricao);
                 projeto.LimparArtistas();
                 model.ArtistasId.ForEach(id => {
-                    var artista = _context.artistas.FirstOrDefault(a => a.Id == id);
+                    var artista = _context.Artistas.FirstOrDefault(a => a.Id == id);
                     if (artista == null)
                     {
                         throw new Exception("Artista não encontrado.");
                     }
                     projeto.IncluirArtista(artista);
                     });
-                _context.projetos.Update(projeto);
+                _context.Projetos.Update(projeto);
                 await _context.SaveChangesAsync();
                 return StatusCode(200, new ResponseModel() { mensagem = "Projeto editado com sucesso." });
             }
@@ -76,14 +76,14 @@ namespace gotaApi.Controllers
         {
             try
             {
-                var projeto = _context.projetos.FirstOrDefault(a => a.Id == Id);
+                var projeto = _context.Projetos.FirstOrDefault(a => a.Id == Id);
                 if (projeto == null)
                 {
                     throw new Exception("Projeto não encontrado.");
                 } 
                 if(arquivar) projeto.Arquivar();
                 else projeto.Deletar();
-                _context.projetos.Update(projeto);
+                _context.Projetos.Update(projeto);
                 await _context.SaveChangesAsync();
                 var textTipo = arquivar ? "arquivado" : "deletado";
                 return StatusCode(200, new ResponseModel() { mensagem = "Projeto "+ textTipo +" com sucesso." });
@@ -99,7 +99,7 @@ namespace gotaApi.Controllers
         {
             try
             {
-                return Ok(await _context.projetos.Where(a => !a.Lixeira && !a.Arquivado).Include(p => p.Artistas)
+                return Ok(await _context.Projetos.Where(a => !a.Lixeira && !a.Arquivado).Include(p => p.Artistas)
                     .Select(p => new ProjetoModel
                     {
                          Id = p.Id,

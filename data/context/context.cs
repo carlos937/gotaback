@@ -21,7 +21,11 @@ namespace data.context
             optionsBuilder.UseSqlServer("Server =mssql2016.hostingzone.com.br; Database =gotadb; User Id =gota; Password =306090;  TrustServerCertificate=True;");
         }
 
-        public DbSet<Artista> artistas { get; set; }
-        public DbSet<Projeto> projetos { get; set; }
+        public DbSet<Artista> Artistas { get; set; }
+        public DbSet<Projeto> Projetos { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Sobre> Sobre { get; set; }
+        public DbSet<Contato> Contato { get; set; }
+        public DbSet<Inicio> Inicio { get; set; }
     }
 }
